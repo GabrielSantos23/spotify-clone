@@ -10,6 +10,9 @@ import Slider from './Slider';
 import usePlayer from '@/hooks/usePlayer';
 import { useEffect, useState } from 'react';
 import useSound from 'use-sound';
+import useSubscribeModal from '@/hooks/useSubscribeModal';
+import { useUser } from '@/hooks/useUser';
+
 interface PlayerContentProps {
   song: Song;
   songUrl: string;
@@ -19,6 +22,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const player = usePlayer();
   const [volume, setVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
+  const { subscription } = useUser();
+  const subscriptionModal = useSubscribeModal();
 
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
   const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
@@ -82,6 +87,14 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       setVolume(0);
     }
   };
+  useEffect(() => {
+    if (!subscription && isPlaying) {
+      setTimeout(() => {
+        pause();
+        subscriptionModal.onOpen();
+      }, 30000);
+    }
+  }, [subscription, isPlaying, pause, subscriptionModal]);
 
   return (
     <div className='grid grid-cols-2 md:grid-cols-3 h-full'>
