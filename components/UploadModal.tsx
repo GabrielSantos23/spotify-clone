@@ -124,7 +124,7 @@ const UploadModal = () => {
         <div>
           <div className='pb-1'>Select an image</div>
           <Input
-            id='soimageng'
+            id='image'
             type='file'
             disabled={isLoading}
             accept='image/*'
